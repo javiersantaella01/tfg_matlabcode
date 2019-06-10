@@ -1,3 +1,24 @@
+% ======================================================================= %
+%  Trabajo final de grado
+%  Reconocimiento automático de la posición del violín y el arco para la evaluación automática de la interpretación musical 
+%  Grado en Ingenieria de Sistemas Audiovisuales
+%  Javier Santaella Sánchez
+%  ESCOLA SUPERIOR POLITÈCNICA UPF
+%  Año 2019
+%  Tutor: Sergio Ivan Giraldo Mendez
+% ======================================================================= %
+%%
+
+% Este script es personal y solo se ha utilizado una vez al princpio del proyecto. 
+% Toma el ground_truth de videolabeler, lo parsea
+% al formato de la tabla de la red neuronal y modifica la resolucion
+% de los boundingboxes. Se ha utilizado desde el PC en el que se
+% ha elaborado el proyecto para obtener la tabla violinDataset que sirve
+% de entrada a la red neuronal, y posiblemente solo funcione en este PC
+% debido a que las rutas de las imagenes apuntan a este PC concreto.
+% De todas formas ejecutar este script no es necesario una vez se tiene una
+% base de imagenes personal, o se carga la utilizada en este proyecto.
+
 
 gTruth_a1 = load('s_a1.mat');
 gTruth_g = load('s_g.mat');
@@ -53,46 +74,11 @@ end
 
 partsViolin = table(imageFileName, violin,bow_hand,bow_end,voluta,barbada,puente)
 
-% clear all;
-% load('trainingData_a1_g_p1_j.mat');
-% trainingData.violin=cellfun(@(x) x.*0.1465,trainingData.violin,'un',0);
-% trainingData.bow_hand=cellfun(@(x) x.*0.1465,trainingData.bow_hand,'un',0);
-% trainingData.bow_end=cellfun(@(x) x.*0.1465,trainingData.bow_end,'un',0);
-% trainingData.voluta=cellfun(@(x) x.*0.1465,trainingData.voluta,'un',0);
-% trainingData.barbada=cellfun(@(x) x.*0.1465,trainingData.barbada,'un',0);
-% trainingData.puente=cellfun(@(x) x.*0.1465,trainingData.puente,'un',0);
-% i=150
-% 
-% for i=1:300
-% I=imread(trainingData.imageFileName{i});
-% try
-% I = insertObjectAnnotation(I,'rectangle',trainingData{i,:}{5},'bb');
-% catch
-% end
-% imshow(I)
-% end
 
-% %%
-% extension = '.jpg';
-% for k=1:size(trainingData,1)
-%     k
-%     path = trainingData{k,1};
-%     [~,filename,~] = fileparts(char(path));
-%     width = size(imread(strcat('imageset/',filename,extension)),2);
-%     heigth = size(imread(strcat('imageset/',filename,extension)),1);
-%     width_original = size(imread(strcat('imageset_originalsize/',filename,extension)),2);
-%     heigth_original = size(imread(strcat('imageset_originalsize/',filename,extension)),1);
-%     factor=(width/width_original+heigth/heigth_original)/2;
-%     trainingData.violin{k}=(trainingData.violin{k}).*factor;
-%     trainingData.bow_hand{k}=(trainingData.bow_hand{k}).*factor;
-%     trainingData.bow_end{k}=(trainingData.bow_end{k}).*factor;
-%     trainingData.voluta{k}=(trainingData.voluta{k}).*factor;
-%     trainingData.barbada{k}=(trainingData.barbada{k}).*factor;
-%     trainingData.puente{k}=(trainingData.puente{k}).*factor;
-% end
-
-
-%%
+%% Cambiamos las rutas a la carpeta /imageset/ para que puedan ser cogidas
+% desde cualquier PC, y cambiamos la resolucion de los boundingbox debido
+% a que las imagenes contenidas en la carpeta imageset han sido reducidas
+% en escala para acelerar el proceso.
 violinDataset = partsViolin;
 extension = '.jpg';
 for k=1:size(violinDataset,1)

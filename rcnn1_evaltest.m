@@ -1,35 +1,44 @@
-%% Evaluate Detector Using Test Set
-%temp = load('testData_a1_g_p1_j.mat');
-%testData = temp.testData;
+% ======================================================================= %
+%  Trabajo final de grado
+%  Reconocimiento automático de la posición del violín y el arco para la evaluación automática de la interpretación musical 
+%  Grado en Ingenieria de Sistemas Audiovisuales
+%  Javier Santaella Sánchez
+%  ESCOLA SUPERIOR POLITÈCNICA UPF
+%  Año 2019
+%  Tutor: Sergio Ivan Giraldo Mendez
+% ======================================================================= %
 %%
-%load('testData_a1_g_p1_j_497-621.mat')
+
+
+
+%% Evalua Detector usando Test Set
+% load('_a1_g_p1_j_smallsize\detector_a1_g_p1_j_124-621.mat')
+% load('_a1_g_p1_j_smallsize\testData_a1_g_p1_j_497-621.mat')
 
 doTrainingAndEval=true;
 if doTrainingAndEval
-    % Create a table to hold the bounding boxes, scores, and labels output by
-    % the detector.
+    % Tabla para contener los bbox, las puntuaciones y las etiquetas generadas por el detector.
     numImages = height(testData)
     results = table('Size',[numImages 3],...
         'VariableTypes',{'cell','cell','cell'},...
         'VariableNames',{'Boxes','Scores','Labels'});
     
     p=1;
-    % Run detector on each image in the test set and collect results.
+    % Ejecuta el detector en cada imagen en el testset y recoge los resultados.
     for i = 1:numImages
         i
-        % Read the image.
-        I = imread(testData.imageFileName{i});
+        % Carga la imagen.
+        I = imread(testData.imageFileName{i}); % Carga la imagen
         
-        % Run the detector.
+        % Ejecuta el detector.
         [bboxes, scores, labels] = detect(detector, I);
         
-        % Collect the results.
-        % Collect the results.
+        % Resultados con varios bbox por cada parte del violin.
         all_results.Boxes{i} = bboxes;
         all_results.Scores{i} = scores;
         all_results.Labels{i} = labels;
         
-        %[selectedBboxes,selectedScores,selectedLabels,index] = selectStrongestBboxMulticlass(bboxes,scores,labels)
+        % Nos quedamos con el mejor bbox por cada parte del violin:
         selectedBboxes=[];
         selectedLabels=[];
         selectedScores=[];
@@ -48,47 +57,21 @@ if doTrainingAndEval
             end
         end
         
-        % Collect the results.
-        % Collect the results.
+        % Resultados solo con el mejor bbox por parte del violin detectada:
         results.Boxes{i} = selectedBboxes;
         results.Scores{i} = selectedScores;
         results.Labels{i} = selectedLabels;
         if length(selectedLabels)==6
-            perfect_detection(p)=i
+            perfect_detection(p)=i % Guardamos el idx de las imagenes con todas las partes detectadas
             p=p+1;
         end
         
-        show_bboxdetection(i,results,testData);
-        lines_violin(i,results,I);
-        iou_eval(i,results,testData);
+        show_bboxdetection(i,results,testData); % Muestra las partes detectadas.
+        lines_violin(i,results,I); % Dibuja las lineas del violín y del arco y calcula los angulos.
+        iou_eval(i,results,testData); % Muestra los resultados del IoU.
         
-        % Annotate detections in the image.
-        %I = insertObjectAnnotation(I,'rectangle',results.Boxes{i},cellstr(results.Labels{i}));
-        %I = insertObjectAnnotation(I,'rectangle',selectedBboxes,cellstr(results.Labels{i}));
-        %figure
-        %imshow(I)
     end
 else
-    % Load pretrained detector for the example.
-    pretrained = load('fasterRCNNResNet50VehicleExample.mat');
-    results = pretrained.results;
+    % Carga los resultados sin hacer Eval
+    load('_a1_g_p1_j_smallsize\results_a1_g_p1_j_497-621.mat')
 end
-    
-%%
-% Extract expected bounding box locations from test data.
-%expectedResults = testData(:, 2:end);
-
-% Evaluate the object detector using Average Precision metric.
-%[ap, recall, precision] = evaluateDetectionPrecision(results, expectedResults);
-
-
-%%
-% Plot precision/recall curve
-% for i=1:length(recall)
-%     figure
-%     plot(recall{i},precision{i})
-%     xlabel('Recall')
-%     ylabel('Precision')
-%     grid on
-%     title(sprintf('Average Precision = %.2f', ap(i)))
-% end

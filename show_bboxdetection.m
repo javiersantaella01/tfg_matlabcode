@@ -1,9 +1,26 @@
+% ======================================================================= %
+%  Trabajo final de grado
+%  Reconocimiento automático de la posición del violín y el arco para la evaluación automática de la interpretación musical 
+%  Grado en Ingenieria de Sistemas Audiovisuales
+%  Javier Santaella Sánchez
+%  ESCOLA SUPERIOR POLITÈCNICA UPF
+%  Año 2019
+%  Tutor: Sergio Ivan Giraldo Mendez
+% ======================================================================= %
+%%
+
+
 function [outputArg1,outputArg2] = show_bboxdetection(i,results,testData)
-%SHOW_BBOXDETECTION Summary of this function goes here
-%   Detailed explanation goes here
+%SHOW_BBOXDETECTION Muestra las partes detectadas
+%   INPUTS
+%   i -> idx de la imagen del testData
+%   results -> resultados del detector.
+%   testData -> testData
+%   OUTPUTS
+%   No outputs 
+
 
 %% Show results of test image "i"
-
 %i=11;
 A = imread(testData.imageFileName{i});
 A = insertObjectAnnotation(A,'rectangle',results.Boxes{i},cellstr(results.Labels{i}));

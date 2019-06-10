@@ -1,10 +1,24 @@
+% ======================================================================= %
+%  Trabajo final de grado
+%  Reconocimiento automático de la posición del violín y el arco para la evaluación automática de la interpretación musical 
+%  Grado en Ingenieria de Sistemas Audiovisuales
+%  Javier Santaella Sánchez
+%  ESCOLA SUPERIOR POLITÈCNICA UPF
+%  Año 2019
+%  Tutor: Sergio Ivan Giraldo Mendez
+% ======================================================================= %
+%%
+
+
 function [outputArg1,outputArg2] = lines_violin(i,results,I)
-%LINES_VIOLIN Summary of this function goes here
-%   Detailed explanation goes here
-%i=49;
-%for i=1:50
-    %pause(3)
-%I = imread(testData.imageFileName{i});    
+%LINES_VIOLIN Calcula y dibuja las lineas del violin y arco:
+%   INPUTS
+%   i -> idx de la imagen del testData
+%   results -> resultados del detector.
+%   I -> imagen del testData
+%   OUTPUTS
+%   No outputs 
+
 subplot(1,3,3)
 imshow(I)
 hold on
@@ -45,7 +59,7 @@ end
 line_violin = false;
 line_bow = false;
 
-%% Line VIOLIN x1 y1 x2 y2
+%% Line VIOLIN x1 y1 x2 y2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % vbpvo 4
 
@@ -232,7 +246,7 @@ end
 % otherwise NO DETECT
 
 
-%% Line BOW x3 y3 x4 y4
+%% Line BOW x3 y3 x4 y4 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % bhbep 3
 
@@ -304,9 +318,10 @@ end
 
 %% ANGLE
 try
-    [angle_gra,angle_rad] = angle_intersection(x1,y1,x2,y2,x3,y3,x4,y4)
+    [angle_gra,angle_rad] = angle_intersection(x1,y1,x2,y2,x3,y3,x4,y4) % Calcula el angulo (gra&rad) entre la interseccion de las dos rectas.
     
 catch
+    
 end
 
 end

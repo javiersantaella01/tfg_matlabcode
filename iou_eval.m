@@ -1,6 +1,25 @@
+% ======================================================================= %
+%  Trabajo final de grado
+%  Reconocimiento automático de la posición del violín y el arco para la evaluación automática de la interpretación musical 
+%  Grado en Ingenieria de Sistemas Audiovisuales
+%  Javier Santaella Sánchez
+%  ESCOLA SUPERIOR POLITÈCNICA UPF
+%  Año 2019
+%  Tutor: Sergio Ivan Giraldo Mendez
+% ======================================================================= %
+%%
+
+
 function [iou_violin,iou_bow_hand,iou_bow_end,iou_puente,iou_voluta,iou_barbada] = iou_eval(i,results,testData,nofigures)
-%IOU_EVAL Summary of this function goes here
-%   Detailed explanation goes here
+%ANGLE_INTERSECTION Calcula el angulo (gra&rad) dada la intersección de dos
+%rectas:
+%   INPUTS
+%   i -> idx de la imagen del testData
+%   results -> resultados del detector.
+%   testData -> testData
+%   nofigures -> true (no muestra figuras) no_parameters (muestra figuras)
+%   OUTPUTS
+%   IoU's de cada parte del violin detectada
 
 violin=results.Boxes{i}(find(contains(string(results.Labels{i}),'violin')),:);
 bow_hand=results.Boxes{i}(find(contains(string(results.Labels{i}),'bow_hand')),:);
@@ -9,7 +28,8 @@ puente=results.Boxes{i}(find(contains(string(results.Labels{i}),'puente')),:);
 voluta=results.Boxes{i}(find(contains(string(results.Labels{i}),'voluta')),:);
 barbada=results.Boxes{i}(find(contains(string(results.Labels{i}),'barbada')),:);
 
-%% Calculates IOU for each BB
+%% Calcula IOU para cada BB
+
 %i=1;
 C = imread(testData.imageFileName{i});
 % violin iou
@@ -41,42 +61,42 @@ else
 end
 
 try
-    iou_violin = bboxOverlapRatio(testData.violin{i},violin);
+    iou_violin = bboxOverlapRatio(testData.violin{i},violin); % Calcula el overlap IoU entre resultados y Ground Truth
 catch
     iou_violin = 0;
 end
 
 try
-iou_bow_hand = bboxOverlapRatio(testData.bow_hand{i},bow_hand);
+iou_bow_hand = bboxOverlapRatio(testData.bow_hand{i},bow_hand); % Calcula el overlap IoU entre resultados y Ground Truth
 catch
     iou_bow_hand = 0;
 end
 
 try
-iou_bow_end = bboxOverlapRatio(testData.bow_end{i},bow_end);
+iou_bow_end = bboxOverlapRatio(testData.bow_end{i},bow_end); % Calcula el overlap IoU entre resultados y Ground Truth
 catch
     iou_bow_end = 0;
 end
 
 try
-iou_puente = bboxOverlapRatio(testData.puente{i},puente);
+iou_puente = bboxOverlapRatio(testData.puente{i},puente); % Calcula el overlap IoU entre resultados y Ground Truth
 catch
     iou_puente = 0;
 end
 
 try
-iou_voluta = bboxOverlapRatio(testData.voluta{i},voluta);
+iou_voluta = bboxOverlapRatio(testData.voluta{i},voluta); % Calcula el overlap IoU entre resultados y Ground Truth
 catch
     iou_voluta = 0;
 end
 
 try
-iou_barbada = bboxOverlapRatio(testData.barbada{i},barbada);
+iou_barbada = bboxOverlapRatio(testData.barbada{i},barbada); % Calcula el overlap IoU entre resultados y Ground Truth
 catch
     iou_barbada = 0;
 end
 
-
+% Si alguna parte no fue detectada IoU = 0
 if length(iou_violin)<1
     iou_violin = 0; end
 if length(iou_bow_hand)<1
